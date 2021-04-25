@@ -203,3 +203,46 @@ resource "aci_rest" "stp" {
 }
   EOF
 }
+
+#------------------------------------------
+# Create Storm Control Interface Policies
+#------------------------------------------
+
+/*
+API Information:
+ - Class: "stormctrlIfPol"
+ - Distinguished Name: "uni/infra/stormctrlifp-{Policy Name}"
+GUI Location:
+ - Fabric > Access Policies > Policies > Interface > Storm Control : {Policy Name}
+*/
+resource "aci_rest" "storm_control" {
+  for_each   = local.storm_control
+  path       = "/api/node/mo/uni/infra/stormctrlifp-${each.value["name"]}.json"
+  class_name = "stormctrlIfPol"
+  payload    = <<EOF
+{
+  "stormctrlIfPol": {
+      "attributes": {
+          "dn": "uni/infra/stormctrlifp-${each.value["name"]}",
+          "annotation": "${each.value["annotation"]}",
+          "descr": "${each.value["description"]}",
+          "name": "${each.value["name"]}",
+          "nameAlias": "",
+          "bcBurstPps": "${each.value["bc_rate_burst_pps"]}",
+          "bcBurstRate": "${each.value["bc_rate_burst_percent"]}",
+          "bcRate": "${each.value["bc_rate_percent"]}",
+          "bcRatePps": "${each.value["bc_rate_pps"]}",
+          "mcBurstPps": "${each.value["mc_rate_burst_pps"]}",
+          "mcBurstRate": "${each.value["mc_rate_burst_percent"]}",
+          "mcRate": "${each.value["mc_rate_percent"]}",
+          "mcRatePps": "${each.value["mc_rate_pps"]}",
+          "stormCtrlAction": "${each.value["action"]}",
+          "uucBurstPps": "${each.value["uc_rate_burst_pps"]}",
+          "uucBurstRate": "${each.value["uc_rate_burst_percent"]}",
+          "uucRate": "${each.value["uc_rate_percent"]}",
+          "uucRatePps": "${each.value["uc_rate_pps"]}"
+    }
+  }
+}
+  EOF
+}

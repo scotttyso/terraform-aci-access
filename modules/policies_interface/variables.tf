@@ -212,6 +212,51 @@ variable "stp" {
   }
 }
 
+variable "storm_control" {
+  description = "Create Storm Control Interface Policies."
+  type = map(object({
+    annotation            = optional(string)
+    description           = optional(string)
+    name                  = optional(string)
+    name_alias            = optional(string)
+    action                = optional(string)
+    bc_rate_percent       = optional(string)
+    bc_rate_burst_percent = optional(string)
+    mc_rate_percent       = optional(string)
+    mc_rate_burst_percent = optional(string)
+    uc_rate_percent       = optional(string)
+    uc_rate_burst_percent = optional(string)
+    bc_rate_pps           = optional(string)
+    bc_rate_burst_pps     = optional(string)
+    mc_rate_pps           = optional(string)
+    mc_rate_burst_pps     = optional(string)
+    uc_rate_pps           = optional(string)
+    uc_rate_burst_pps     = optional(string)
+  }))
+  default = {
+    default = {
+      annotation            = ""
+      description           = ""
+      name                  = "default"
+      name_alias            = ""
+      action                = "drop" # Options are (drop|shutdown)
+      bc_rate_percent       = "100.000000"
+      bc_rate_burst_percent = "100.000000"
+      mc_rate_percent       = "100.000000"
+      mc_rate_burst_percent = "100.000000"
+      uc_rate_percent       = "100.000000"
+      uc_rate_burst_percent = "100.000000"
+      bc_rate_pps           = "unspecified"
+      bc_rate_burst_pps     = "unspecified"
+      mc_rate_pps           = "unspecified"
+      mc_rate_burst_pps     = "unspecified"
+      uc_rate_pps           = "unspecified"
+      uc_rate_burst_pps     = "unspecified"
+    }
+  }
+}
+
+
 locals {
 
   cdp = {
@@ -317,6 +362,28 @@ locals {
       description = (v.description != null ? v.description : "")
       name        = coalesce(v.name, "bpdu_fg")
       name_alias  = (v.name_alias != null ? v.name_alias : "")
+    }
+  }
+
+  storm_control = {
+    for k, v in var.storm_control : k => {
+      annotation            = (v.annotation != null ? v.annotation : "")
+      description           = (v.description != null ? v.description : "")
+      name                  = coalesce(v.name, "default")
+      name_alias            = (v.name_alias != null ? v.name_alias : "")
+      action                = coalesce(v.action, "drop")
+      bc_rate_percent       = coalesce(v.bc_rate_percent, "100.000000")
+      bc_rate_burst_percent = coalesce(v.bc_rate_burst_percent, "100.000000")
+      mc_rate_percent       = coalesce(v.mc_rate_percent, "100.000000")
+      mc_rate_burst_percent = coalesce(v.mc_rate_burst_percent, "100.000000")
+      uc_rate_percent       = coalesce(v.uc_rate_percent, "100.000000")
+      uc_rate_burst_percent = coalesce(v.uc_rate_burst_percent, "100.000000")
+      bc_rate_pps           = coalesce(v.bc_rate_pps, "unspecified")
+      bc_rate_burst_pps     = coalesce(v.bc_rate_burst_pps, "unspecified")
+      mc_rate_pps           = coalesce(v.mc_rate_pps, "unspecified")
+      mc_rate_burst_pps     = coalesce(v.mc_rate_pps, "unspecified")
+      uc_rate_pps           = coalesce(v.uc_rate_pps, "unspecified")
+      uc_rate_burst_pps     = coalesce(v.uc_rate_burst_pps, "unspecified")
     }
   }
 }

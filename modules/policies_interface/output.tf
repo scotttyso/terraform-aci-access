@@ -42,3 +42,8 @@ output "stp" {
   description = "This output will provide the Spanning Tree Policy ID."
   value       = { for v in sort(keys(aci_rest.stp)) : v => aci_rest.stp[v].id }
 }
+
+output "storm_control" {
+  description = "This output will provide the Storm Control Policy ID."
+  value       = { for v in sort(keys(aci_rest.storm_control)) : v => aci_rest.storm_control[v].id }
+}
