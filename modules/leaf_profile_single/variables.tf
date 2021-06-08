@@ -41,7 +41,7 @@ locals {
       name                    = coalesce(v.name, "leaf101")
       name_alias              = (v.name_alias != null ? v.name_alias : "")
       node_block_from         = coalesce(v.node_block_from, 201)
-      node_block_name         = coalesce(v.node_block_name, "blk1")
+      node_block_name         = coalesce(v.node_block_name, "bl${coalesce(v.node_block_from, 201)}${coalesce(v.node_block_to, 201)}")
       node_block_to           = coalesce(v.node_block_to, 201)
       leaf_selector_name      = coalesce(v.leaf_selector_name, "leaf101")
       leaf_interface_profile  = (v.leaf_interface_profile != null ? v.leaf_interface_profile : "")
